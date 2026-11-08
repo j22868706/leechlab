@@ -6,11 +6,11 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  // GitHub Pages domain
-  site: 'https://j22868706.github.io',
+  // Production custom domain
+  site: 'https://leechih.us',
 
-  // GitHub repository name
-  base: '/leechlab',
+  // Serve the custom domain from its root
+  base: '/',
 
   integrations: [mdx(), sitemap()],
 
