@@ -1,59 +1,791 @@
+
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort(
+    (a, b) =>
+      b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  )
+  .slice(0, 4);
+
+const projects = [
+  {
+    title: 'FabFlow',
+    category: 'Simulation / Backend',
+    description:
+      'A discrete-event semiconductor fab simulator exploring scheduling, throughput, and bottleneck optimization.',
+    stack: ['Python', 'SimPy', 'FastAPI', 'Docker'],
+    url: 'https://github.com/j22868706/sideproject_fabflow',
+    symbol: '01',
+  },
+  {
+    title: 'AI Chart Assistant',
+    category: 'LLM / AI Engineering',
+    description:
+      'An AI-powered clinical documentation assistant using speech recognition, RAG, and automated SOAP note generation.',
+    stack: ['Python', 'Whisper', 'FastAPI', 'RAG'],
+    url: 'https://github.com/j22868706/ai_chart_assistant',
+    symbol: '02',
+  },
+  {
+    title: 'SisFall Detection',
+    category: 'Machine Learning / IoT',
+    description:
+      'A fall detection pipeline using wearable sensor data, machine learning, and real-time alert integration.',
+    stack: ['LightGBM', 'FastAPI', 'Docker'],
+    url: 'https://github.com/j22868706',
+    symbol: '03',
+  },
+];
+
+const skills = [
+  'Python',
+  'TypeScript',
+  'AI / ML',
+  'LLM Systems',
+  'Docker',
+  'AWS',
+  'DevOps',
+  'Robotics',
+];
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to
-				build a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your{' '}
-				<code>astro.config.mjs</code> file. You can customize your setup with{' '}
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like
-				Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>
-					Edit this page in <code>src/pages/index.astro</code>
-				</li>
-				<li>
-					Edit the site header items in <code>src/components/Header.astro</code>
-				</li>
-				<li>
-					Add your name to the footer in <code>src/components/Footer.astro</code>
-				</li>
-				<li>
-					Check out the included blog posts in <code>src/content/blog/</code>
-				</li>
-				<li>
-					Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code>
-				</li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to{' '}
-				<a href="https://docs.astro.build/">read the docs</a> or{' '}
-				<a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out{' '}
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a> by{' '}
-				<a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead
+      title={SITE_TITLE}
+      description={SITE_DESCRIPTION}
+    />
+
+    <script is:inline>
+      try {
+        const savedTheme = localStorage.getItem('leechlab-theme');
+        const prefersDark = window.matchMedia(
+          '(prefers-color-scheme: dark)'
+        ).matches;
+
+        document.documentElement.dataset.theme =
+          savedTheme || (prefersDark ? 'dark' : 'light');
+      } catch {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="site-shell">
+      <!-- Navigation -->
+      <header class="site-header">
+        <nav class="navigation" aria-label="Main navigation">
+          <a class="logo" href="/">
+            <span class="logo-icon">&lt;/&gt;</span>
+            <span>LeeCh<span class="accent">Lab</span></span>
+          </a>
+
+          <div class="nav-links">
+            <a href="/blog/">Writing</a>
+            <a href="#projects">Projects</a>
+            <a href="/about/">About</a>
+            <a
+              href="https://github.com/j22868706"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+            <button
+              id="theme-toggle"
+              class="theme-button"
+              type="button"
+              aria-label="Toggle color theme"
+              title="Toggle color theme"
+            >
+              ◐
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <!-- Hero -->
+        <section class="hero">
+          <div class="eyebrow">
+            <span class="status-dot"></span>
+            Building in public
+          </div>
+
+          <p class="hero-kicker">HELLO, I'M HUNG-CHIH.</p>
+
+          <h1>
+            Exploring AI.<br />
+            <span class="gradient-text">Building Systems.</span>
+          </h1>
+
+          <p class="hero-description">
+            I'm an engineer-in-training with a background in
+            healthcare, exploring software engineering,
+            AI infrastructure, cloud computing, and robotics.
+          </p>
+
+          <p class="hero-description secondary-description">
+            I learn by building real-world projects and
+            documenting the engineering behind them.
+          </p>
+
+          <div class="hero-actions">
+            <a class="primary-button" href="#projects">
+              Explore Projects <span aria-hidden="true">↗</span>
+            </a>
+
+            <a class="secondary-button" href="/blog/">
+              Read My Notes <span aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <div class="skill-list" aria-label="Technology interests">
+            {skills.map((skill) => (
+              <span class="skill-tag">{skill}</span>
+            ))}
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section id="projects" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">WHAT I'VE BUILT</p>
+              <h2>Featured Projects</h2>
+              <p class="section-subtitle">
+                Engineering ideas into working systems.
+              </p>
+            </div>
+
+            <a
+              class="section-link"
+              href="https://github.com/j22868706"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View GitHub ↗
+            </a>
+          </div>
+
+          <div class="project-grid">
+            {projects.map((project) => (
+              <article class="project-card">
+                <div class="project-top">
+                  <span class="project-symbol">{project.symbol}</span>
+                  <span class="project-category">
+                    {project.category}
+                  </span>
+                </div>
+
+                <h3>{project.title}</h3>
+                <p class="project-description">
+                  {project.description}
+                </p>
+
+                <div class="project-stack">
+                  {project.stack.map((tech) => (
+                    <span>{tech}</span>
+                  ))}
+                </div>
+
+                <a
+                  class="project-link"
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View ${project.title} on GitHub`}
+                >
+                  View Project ↗
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <!-- Writing -->
+        <section id="writing" class="section writing-section">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">NOTES FROM THE LAB</p>
+              <h2>Latest Writing</h2>
+              <p class="section-subtitle">
+                Learning, experiments, and technical deep dives.
+              </p>
+            </div>
+
+            <a class="section-link" href="/blog/">
+              All Articles →
+            </a>
+          </div>
+
+          <div class="article-list">
+            {posts.map((post) => (
+              <a
+                class="article"
+                href={`/blog/${post.id}/`}
+              >
+                <div class="article-content">
+                  <time datetime={post.data.pubDate.toISOString()}>
+                    {post.data.pubDate.toLocaleDateString(
+                      'en-US',
+                      {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        timeZone: 'UTC',
+                      }
+                    )}
+                  </time>
+
+                  <h3>{post.data.title}</h3>
+
+                  <p>{post.data.description}</p>
+                </div>
+
+                <span class="article-arrow" aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <!-- About -->
+        <section class="about-panel">
+          <p class="section-kicker">ABOUT THIS LAB</p>
+
+          <h2>Learn deeply. Build thoughtfully. Share openly.</h2>
+
+          <p>
+            LeeCh Lab is my personal engineering notebook.
+            I document what works, what fails, and what I
+            learn while exploring AI, software, and systems.
+          </p>
+
+          <a class="section-link" href="/about/">
+            More about me →
+          </a>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="site-footer">
+        <span>© {new Date().getFullYear()} LeeCh Lab</span>
+        <span>Built with Astro · Deployed with GitHub Pages</span>
+        <a
+          href="https://github.com/j22868706"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub ↗
+        </a>
+      </footer>
+    </div>
+
+    <script>
+      const themeButton = document.querySelector<HTMLButtonElement>(
+        '#theme-toggle'
+      );
+
+      themeButton?.addEventListener('click', () => {
+        const html = document.documentElement;
+        const nextTheme =
+          html.dataset.theme === 'dark' ? 'light' : 'dark';
+
+        html.dataset.theme = nextTheme;
+
+        try {
+          localStorage.setItem('leechlab-theme', nextTheme);
+        } catch {
+          // The toggle still works when storage is unavailable.
+        }
+      });
+    </script>
+  </body>
 </html>
+
+<style>
+  :global(html) {
+    scroll-behavior: smooth;
+    --page-bg: #ffffff;
+    --surface: #f6f8fb;
+    --text-primary: #172033;
+    --text-muted: #637084;
+    --border-color: #e3e8ef;
+    --accent-color: #2563eb;
+    --accent-soft: #eff6ff;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    color-scheme: light;
+  }
+
+  :global(html[data-theme='dark']) {
+    --page-bg: #0b1120;
+    --surface: #131e30;
+    --text-primary: #edf3fd;
+    --text-muted: #9aaac0;
+    --border-color: #27354a;
+    --accent-color: #75b6ff;
+    --accent-soft: #142b48;
+    --card-shadow: none;
+    color-scheme: dark;
+  }
+
+  :global(body) {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  .site-shell {
+    width: 100%;
+  }
+
+  .site-shell a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-header {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .navigation {
+    max-width: 1120px;
+    min-height: 76px;
+    margin: auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    white-space: nowrap;
+  }
+
+  .logo-icon {
+    display: grid;
+    place-items: center;
+    width: 39px;
+    height: 39px;
+    border-radius: 11px;
+    background: var(--accent-soft);
+    color: var(--accent-color);
+    font-size: 15px;
+    font-family: monospace;
+  }
+
+  .accent {
+    color: var(--accent-color);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .nav-links a:hover,
+  .section-link:hover,
+  .project-link:hover {
+    color: var(--accent-color);
+  }
+
+  .theme-button {
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+    color: var(--text-primary);
+    width: 37px;
+    height: 37px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  main {
+    max-width: 1120px;
+    margin: auto;
+    padding: 0 24px 90px;
+  }
+
+  .hero {
+    padding: 105px 0 112px;
+    max-width: 840px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid var(--border-color);
+    padding: 6px 13px;
+    border-radius: 30px;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-bottom: 30px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+  }
+
+  .hero-kicker,
+  .section-kicker {
+    color: var(--accent-color);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  h1, h2, h3, p {
+    margin-top: 0;
+  }
+
+  h1 {
+    font-size: clamp(46px, 7vw, 78px);
+    line-height: 1.13;
+    letter-spacing: -3px;
+    margin: 17px 0 27px;
+    font-weight: 800;
+  }
+
+  .gradient-text {
+    background: linear-gradient(
+      100deg,
+      #60a5fa,
+      #818cf8,
+      #38bdf8
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-description {
+    max-width: 690px;
+    font-size: 19px;
+    line-height: 1.85;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  .secondary-description {
+    font-size: 16px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 13px;
+    flex-wrap: wrap;
+    margin-top: 35px;
+  }
+
+  .primary-button,
+  .secondary-button {
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: transform 0.2s;
+  }
+
+  .primary-button {
+    background: #2563eb;
+    color: white !important;
+  }
+
+  .secondary-button {
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+  }
+
+  .primary-button:hover,
+  .secondary-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 38px;
+  }
+
+  .skill-tag,
+  .project-stack span {
+    padding: 5px 11px;
+    border-radius: 7px;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+  }
+
+  .section {
+    padding: 35px 0 85px;
+    scroll-margin-top: 30px;
+  }
+
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 30px;
+  }
+
+  h2 {
+    font-size: clamp(28px, 4vw, 36px);
+    letter-spacing: -1px;
+    line-height: 1.25;
+    margin: 8px 0 12px;
+  }
+
+  .section-subtitle {
+    color: var(--text-muted);
+    margin-bottom: 0;
+  }
+
+  .section-link {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 25px;
+    min-height: 340px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-color);
+  }
+
+  .project-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .project-symbol {
+    font-family: monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent-color);
+  }
+
+  .project-category {
+    color: var(--text-muted);
+    font-size: 11px;
+    text-align: right;
+  }
+
+  .project-card h3 {
+    font-size: 21px;
+    margin-bottom: 10px;
+    letter-spacing: -0.4px;
+  }
+
+  .project-description {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .project-stack {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding: 14px 0 23px;
+  }
+
+  .project-stack span {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .project-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-color) !important;
+  }
+
+  .writing-section {
+    border-top: 1px solid var(--border-color);
+  }
+
+  .article {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 23px 4px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .article:hover h3 {
+    color: var(--accent-color);
+  }
+
+  .article time {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .article h3 {
+    font-size: 19px;
+    margin: 7px 0;
+    transition: color 0.2s;
+  }
+
+  .article p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .article-arrow {
+    color: var(--accent-color);
+    font-size: 21px;
+    flex-shrink: 0;
+  }
+
+  .about-panel {
+    padding: 45px;
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    background: var(--surface);
+  }
+
+  .about-panel h2 {
+    max-width: 650px;
+  }
+
+  .about-panel > p:not(.section-kicker) {
+    max-width: 680px;
+    color: var(--text-muted);
+  }
+
+  .site-footer {
+    max-width: 1120px;
+    margin: auto;
+    padding: 30px 24px 45px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero {
+      padding: 80px 0;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .navigation {
+      padding: 14px 18px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links {
+      width: 100%;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    main {
+      padding: 0 18px 60px;
+    }
+
+    .hero {
+      padding: 65px 0 75px;
+    }
+
+    h1 {
+      letter-spacing: -2px;
+    }
+
+    .hero-description {
+      font-size: 16px;
+    }
+
+    .section-heading {
+      align-items: start;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .project-card {
+      min-height: 280px;
+    }
+
+    .about-panel {
+      padding: 25px;
+    }
+
+    .site-footer {
+      padding: 25px 18px;
+      flex-direction: column;
+      align-items: start;
+    }
+  }
+</style>
