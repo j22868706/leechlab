@@ -82,15 +82,21 @@ const skills = [
       <!-- Navigation -->
       <header class="site-header">
         <nav class="navigation" aria-label="Main navigation">
-          <a class="logo" href="/">
+          <a class="logo" href={`${import.meta.env.BASE_URL}/`}>
             <span class="logo-icon">&lt;/&gt;</span>
             <span>LeeCh<span class="accent">Lab</span></span>
           </a>
 
           <div class="nav-links">
-            <a href="/blog/">Writing</a>
-            <a href="#projects">Projects</a>
-            <a href="/about/">About</a>
+			<a href={`${import.meta.env.BASE_URL}blog/`}>
+  				Blog
+			</a>
+			<a href={`${import.meta.env.BASE_URL}projects/`}>
+  				Project
+			</a> 
+			<a href={`${import.meta.env.BASE_URL}About/`}>
+  				About
+			</a> 
             <a
               href="https://github.com/j22868706"
               target="_blank"
@@ -265,7 +271,7 @@ const skills = [
           <h2>Learn deeply. Build thoughtfully. Share openly.</h2>
 
           <p>
-            LeeCh Lab is my personal engineering notebook.
+            Leech Lab is my personal engineering notebook.
             I document what works, what fails, and what I
             learn while exploring AI, software, and systems.
           </p>
@@ -278,7 +284,7 @@ const skills = [
 
       <!-- Footer -->
       <footer class="site-footer">
-        <span>© {new Date().getFullYear()} LeeCh Lab</span>
+        <span>© {new Date().getFullYear()} Leech Lab</span>
         <span>Built with Astro · Deployed with GitHub Pages</span>
         <a
           href="https://github.com/j22868706"
