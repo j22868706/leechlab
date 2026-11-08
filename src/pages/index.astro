@@ -1,8 +1,11 @@
-
 ---
 import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
+const base = `${import.meta.env.BASE_URL.replace(/\/+$/, '')}/`;
+
 
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
@@ -62,60 +65,13 @@ const skills = [
       description={SITE_DESCRIPTION}
     />
 
-    <script is:inline>
-      try {
-        const savedTheme = localStorage.getItem('leechlab-theme');
-        const prefersDark = window.matchMedia(
-          '(prefers-color-scheme: dark)'
-        ).matches;
 
-        document.documentElement.dataset.theme =
-          savedTheme || (prefersDark ? 'dark' : 'light');
-      } catch {
-        document.documentElement.dataset.theme = 'dark';
-      }
-    </script>
   </head>
 
   <body>
     <div class="site-shell">
       <!-- Navigation -->
-      <header class="site-header">
-        <nav class="navigation" aria-label="Main navigation">
-          <a class="logo" href={`${import.meta.env.BASE_URL}/`}>
-            <span class="logo-icon">&lt;/&gt;</span>
-            <span>LeeCh<span class="accent">Lab</span></span>
-          </a>
-
-          <div class="nav-links">
-			<a href={`${import.meta.env.BASE_URL}blog/`}>
-  				Blog
-			</a>
-			<a href={`${import.meta.env.BASE_URL}projects/`}>
-  				Project
-			</a> 
-			<a href={`${import.meta.env.BASE_URL}About/`}>
-  				About
-			</a> 
-            <a
-              href="https://github.com/j22868706"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>
-            <button
-              id="theme-toggle"
-              class="theme-button"
-              type="button"
-              aria-label="Toggle color theme"
-              title="Toggle color theme"
-            >
-              ◐
-            </button>
-          </div>
-        </nav>
-      </header>
+      <Header />
 
       <main>
         <!-- Hero -->
@@ -148,7 +104,7 @@ const skills = [
               Explore Projects <span aria-hidden="true">↗</span>
             </a>
 
-            <a class="secondary-button" href="/blog/">
+            <a class="secondary-button" href={`${base}blog/`}>
               Read My Notes <span aria-hidden="true">→</span>
             </a>
           </div>
@@ -227,7 +183,7 @@ const skills = [
               </p>
             </div>
 
-            <a class="section-link" href="/blog/">
+            <a class="section-link" href={`${base}blog/`}>
               All Articles →
             </a>
           </div>
@@ -236,7 +192,7 @@ const skills = [
             {posts.map((post) => (
               <a
                 class="article"
-                href={`/blog/${post.id}/`}
+                href={`${base}blog/${post.id}/`}
               >
                 <div class="article-content">
                   <time datetime={post.data.pubDate.toISOString()}>
@@ -276,89 +232,21 @@ const skills = [
             learn while exploring AI, software, and systems.
           </p>
 
-          <a class="section-link" href="/about/">
+          <a class="section-link" href={`${base}about/`}>
             More about me →
           </a>
         </section>
       </main>
 
       <!-- Footer -->
-      <footer class="site-footer">
-        <span>© {new Date().getFullYear()} Leech Lab</span>
-        <span>Built with Astro · Deployed with GitHub Pages</span>
-        <a
-          href="https://github.com/j22868706"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub ↗
-        </a>
-      </footer>
+      <Footer />
     </div>
 
-    <script>
-      const themeButton = document.querySelector<HTMLButtonElement>(
-        '#theme-toggle'
-      );
 
-      themeButton?.addEventListener('click', () => {
-        const html = document.documentElement;
-        const nextTheme =
-          html.dataset.theme === 'dark' ? 'light' : 'dark';
-
-        html.dataset.theme = nextTheme;
-
-        try {
-          localStorage.setItem('leechlab-theme', nextTheme);
-        } catch {
-          // The toggle still works when storage is unavailable.
-        }
-      });
-    </script>
   </body>
 </html>
 
 <style>
-  :global(html) {
-    scroll-behavior: smooth;
-    --page-bg: #ffffff;
-    --surface: #f6f8fb;
-    --text-primary: #172033;
-    --text-muted: #637084;
-    --border-color: #e3e8ef;
-    --accent-color: #2563eb;
-    --accent-soft: #eff6ff;
-    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-    color-scheme: light;
-  }
-
-  :global(html[data-theme='dark']) {
-    --page-bg: #0b1120;
-    --surface: #131e30;
-    --text-primary: #edf3fd;
-    --text-muted: #9aaac0;
-    --border-color: #27354a;
-    --accent-color: #75b6ff;
-    --accent-soft: #142b48;
-    --card-shadow: none;
-    color-scheme: dark;
-  }
-
-  :global(body) {
-    margin: 0;
-    background: var(--page-bg);
-    color: var(--text-primary);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont,
-      "Segoe UI", sans-serif;
-    font-size: 16px;
-    line-height: 1.65;
-    overflow-wrap: anywhere;
-  }
-
-  :global(*) {
-    box-sizing: border-box;
-  }
-
   .site-shell {
     width: 100%;
   }
@@ -368,76 +256,13 @@ const skills = [
     text-decoration: none;
   }
 
-  .site-header {
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .navigation {
-    max-width: 1120px;
-    min-height: 76px;
-    margin: auto;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-  }
-
-  .logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 21px;
-    font-weight: 800;
-    letter-spacing: -0.8px;
-    white-space: nowrap;
-  }
-
-  .logo-icon {
-    display: grid;
-    place-items: center;
-    width: 39px;
-    height: 39px;
-    border-radius: 11px;
-    background: var(--accent-soft);
-    color: var(--accent-color);
-    font-size: 15px;
-    font-family: monospace;
-  }
-
-  .accent {
-    color: var(--accent-color);
-  }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .nav-links a:hover,
   .section-link:hover,
-  .project-link:hover {
-    color: var(--accent-color);
-  }
-
-  .theme-button {
-    border: 1px solid var(--border-color);
-    background: var(--surface);
-    color: var(--text-primary);
-    width: 37px;
-    height: 37px;
-    border-radius: 10px;
-    font-size: 20px;
-    cursor: pointer;
-  }
+  .project-link:hover { color: var(--accent-color); }
 
   main {
-    max-width: 1120px;
+    max-width: var(--content-width);
     margin: auto;
-    padding: 0 24px 90px;
+    padding: 0 0 90px;
   }
 
   .hero {
@@ -718,19 +543,6 @@ const skills = [
     color: var(--text-muted);
   }
 
-  .site-footer {
-    max-width: 1120px;
-    margin: auto;
-    padding: 30px 24px 45px;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    color: var(--text-muted);
-    font-size: 12px;
-  }
-
   @media (max-width: 900px) {
     .project-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -742,20 +554,10 @@ const skills = [
   }
 
   @media (max-width: 600px) {
-    .navigation {
-      padding: 14px 18px;
-      flex-wrap: wrap;
-    }
 
-    .nav-links {
-      width: 100%;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: 13px;
-    }
 
     main {
-      padding: 0 18px 60px;
+      padding: 0 0 60px;
     }
 
     .hero {
@@ -788,10 +590,5 @@ const skills = [
       padding: 25px;
     }
 
-    .site-footer {
-      padding: 25px 18px;
-      flex-direction: column;
-      align-items: start;
-    }
   }
 </style>
