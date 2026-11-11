@@ -1,0 +1,15 @@
+---
+interface Props { tags?: string[] }
+const { tags = [] } = Astro.props;
+const base = `${import.meta.env.BASE_URL.replace(/\/+$/, '')}/`;
+---
+{tags.length > 0 && (
+  <div class="post-tags" aria-label="Article tags">
+    {tags.map((tag) => <a href={`${base}blog/tags/${tag}/`} rel="tag">#{tag}</a>)}
+  </div>
+)}
+<style>
+  .post-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+  .post-tags a { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent-color); font-size: 0.875rem; line-height: 1.5; text-decoration: none; }
+  .post-tags a:hover { text-decoration: underline; }
+</style>

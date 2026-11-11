@@ -12,7 +12,11 @@ export default defineConfig({
   // Serve the custom domain from its root
   base: '/',
 
-  integrations: [mdx(), sitemap()],
+  redirects: {
+    '/blog/first-post': '/blog/leetcode_learning_notes_two_sum_contains_duplicate_and_valid_anagram/',
+  },
+
+  integrations: [mdx(), sitemap({ filter: (page) => !new URL(page).pathname.replace(/\/$/, '').endsWith('/blog/first-post') })],
 
   fonts: [
     {
