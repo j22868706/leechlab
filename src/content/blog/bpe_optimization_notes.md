@@ -116,11 +116,3 @@ while len(vocab) < vocab_size:
             pair_counts[pair] += freq
             pair_to_tokens[pair].add(merged_token)
 ```
-
-## 4. Verification
-
-All three tests in `tests/test_train_bpe.py` passed. They cover the reference merge order and vocabulary, special tokens, and the 1.5-second speed threshold.
-
-```sh
-.venv/bin/python -m pytest tests/test_train_bpe.py -q
-```
